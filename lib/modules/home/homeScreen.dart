@@ -76,7 +76,9 @@ class _HomeScreenState extends State<HomeScreen> {
     binanceFetch("1m");
     setFirstTab();
     callItself();
-    subscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+    subscription = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) {
       print(result.index); // 0=wifi, 1=mobile, 2=none
       if (result.index != 2) {
         setFirstTab();
@@ -97,7 +99,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
     var snackBar = SnackBar(
       duration: Duration(seconds: 2),
-      backgroundColor: isGreeen ? AllCoustomTheme.getThemeData().primaryColor : Colors.red,
+      backgroundColor:
+          isGreeen ? AllCoustomTheme.getThemeData().primaryColor : Colors.red,
       content: Text(
         value,
         style: TextStyle(
@@ -134,18 +137,21 @@ class _HomeScreenState extends State<HomeScreen> {
         } else {
           allCoinList.addAll(coindata);
           setState(() {
-            allCoinList.removeWhere((length) => length.quote!.uSD!.marketCap == null);
+            allCoinList
+                .removeWhere((length) => length.quote!.uSD!.marketCap == null);
             if (allCoin == true) {
               getApiAllData(index);
             }
             lstCryptoCoinDetail.clear();
             lstCryptoCoinDetail.addAll(allCoinList);
-            lstCryptoCoinDetail.sort((a, b) => b.quote!.uSD!.marketCap!.compareTo(a.quote!.uSD!.marketCap ?? 0));
+            lstCryptoCoinDetail.sort((a, b) => b.quote!.uSD!.marketCap!
+                .compareTo(a.quote!.uSD!.marketCap ?? 0));
             print(lstCryptoCoinDetail[0].quote!.uSD);
 
             marketListData.clear();
             marketListData.addAll(allCoinList);
-            marketListData.sort((a, b) => b.quote.uSD.marketCap.compareTo(a.quote.uSD.marketCap));
+            marketListData.sort((a, b) =>
+                b.quote.uSD.marketCap.compareTo(a.quote.uSD.marketCap));
           });
         }
       }
@@ -159,7 +165,8 @@ class _HomeScreenState extends State<HomeScreen> {
     callItself();
   }
 
-  Future<Null> changeHistory(String type, String amt, String total, String agg) async {
+  Future<Null> changeHistory(
+      String type, String amt, String total, String agg) async {
     setState(() {
       _high = "0";
       _low = "0";
@@ -221,9 +228,11 @@ class _HomeScreenState extends State<HomeScreen> {
             "?fsym=" +
             symbol +
             "&tsym=USD&limit=" +
-            (ohlcvWidthOptions[historyTotal][currentOHLCVWidthSetting][1] - 1).toString() +
+            (ohlcvWidthOptions[historyTotal][currentOHLCVWidthSetting][1] - 1)
+                .toString() +
             "&aggregate=" +
-            ohlcvWidthOptions[historyTotal][currentOHLCVWidthSetting][2].toString(),
+            ohlcvWidthOptions[historyTotal][currentOHLCVWidthSetting][2]
+                .toString(),
         options: Options(
           headers: head,
         ),
@@ -326,7 +335,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                       color: Colors.transparent,
                                       child: Icon(
                                         Icons.card_travel,
-                                        color: isSelect1 ? AllCoustomTheme.getTextThemeColors() : AllCoustomTheme.getsecoundTextThemeColor(),
+                                        color: isSelect1
+                                            ? AllCoustomTheme
+                                                .getTextThemeColors()
+                                            : AllCoustomTheme
+                                                .getsecoundTextThemeColor(),
                                       ),
                                     ),
                                   ),
@@ -432,7 +445,9 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             drawer: SizedBox(
-              width: MediaQuery.of(context).size.width * 0.75 < 400 ? MediaQuery.of(context).size.width * 0.75 : 350,
+              width: MediaQuery.of(context).size.width * 0.75 < 400
+                  ? MediaQuery.of(context).size.width * 0.75
+                  : 350,
               child: Drawer(
                 elevation: 0,
                 child: AppDrawer(
@@ -476,7 +491,9 @@ class _HomeScreenState extends State<HomeScreen> {
       color: Colors.transparent,
       child: Icon(
         Icons.card_travel,
-        color: isSelect1 ? AllCoustomTheme.getTextThemeColors() : AllCoustomTheme.getsecoundTextThemeColor(),
+        color: isSelect1
+            ? AllCoustomTheme.getTextThemeColors()
+            : AllCoustomTheme.getsecoundTextThemeColor(),
       ),
     );
   }
@@ -488,7 +505,9 @@ class _HomeScreenState extends State<HomeScreen> {
       color: Colors.transparent,
       child: Icon(
         Icons.pie_chart,
-        color: isSelect2 ? AllCoustomTheme.getTextThemeColors() : AllCoustomTheme.getsecoundTextThemeColor(),
+        color: isSelect2
+            ? AllCoustomTheme.getTextThemeColors()
+            : AllCoustomTheme.getsecoundTextThemeColor(),
       ),
     );
   }
@@ -500,7 +519,9 @@ class _HomeScreenState extends State<HomeScreen> {
       color: Colors.transparent,
       child: Icon(
         Icons.settings,
-        color: isSelect3 ? AllCoustomTheme.getTextThemeColors() : AllCoustomTheme.getsecoundTextThemeColor(),
+        color: isSelect3
+            ? AllCoustomTheme.getTextThemeColors()
+            : AllCoustomTheme.getsecoundTextThemeColor(),
       ),
     );
   }
@@ -509,6 +530,7 @@ class _HomeScreenState extends State<HomeScreen> {
   WebSocketChannel? _channel;
 
   String interval = "1m";
+
   @override
   void dispose() {
     _channel!.sink.close();
@@ -516,7 +538,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> binanceFetch(String interval) async {
-    await ApiProvider().fetchCandles(symbol: "BTCUSDT", interval: interval).then(
+    await ApiProvider()
+        .fetchCandles(symbol: "BTCUSDT", interval: interval)
+        .then(
           (value) => setState(
             () {
               this.interval = interval;
@@ -542,7 +566,8 @@ class _HomeScreenState extends State<HomeScreen> {
   void updateCandlesFromSnapshot(AsyncSnapshot<Object?> snapshot) {
     if (snapshot.data != null) {
       final data = jsonDecode(snapshot.data as String) as Map<String, dynamic>;
-      if (data.containsKey("k") == true && candles[0].date.millisecondsSinceEpoch == data["k"]["t"]) {
+      if (data.containsKey("k") == true &&
+          candles[0].date.millisecondsSinceEpoch == data["k"]["t"]) {
         candles[0] = Candle(
             date: candles[0].date,
             high: double.parse(data["k"]["h"]),
@@ -552,7 +577,8 @@ class _HomeScreenState extends State<HomeScreen> {
             volume: double.parse(data["k"]["v"]));
       } else if (data.containsKey("k") == true &&
           data["k"]["t"] - candles[0].date.millisecondsSinceEpoch ==
-              candles[0].date.millisecondsSinceEpoch - candles[1].date.millisecondsSinceEpoch) {
+              candles[0].date.millisecondsSinceEpoch -
+                  candles[1].date.millisecondsSinceEpoch) {
         candles.insert(
             0,
             Candle(
@@ -596,7 +622,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           scale: anim.value,
                           child: Text(
                             'Bitcoin, BTC Live',
-                            style: TextStyle(color: AllCoustomTheme.getTextThemeColors(), fontSize: ConstanceData.SIZE_TITLE18),
+                            style: TextStyle(
+                                color: AllCoustomTheme.getTextThemeColors(),
+                                fontSize: ConstanceData.SIZE_TITLE18),
                           ),
                         ),
                       )
@@ -695,8 +723,16 @@ class _HomeScreenState extends State<HomeScreen> {
                               scale: anim.value,
                               child: generalStats.percentChange1h != null
                                   ? Icon(
-                                      generalStats.percentChange1h.toString().contains('-') ? Icons.arrow_downward : Icons.arrow_upward,
-                                      color: generalStats.percentChange1h.toString().contains('-') ? Colors.red : Colors.green,
+                                      generalStats.percentChange1h
+                                              .toString()
+                                              .contains('-')
+                                          ? Icons.arrow_downward
+                                          : Icons.arrow_upward,
+                                      color: generalStats.percentChange1h
+                                              .toString()
+                                              .contains('-')
+                                          ? Colors.red
+                                          : Colors.green,
                                       size: 16,
                                     )
                                   : SizedBox(),
@@ -710,10 +746,15 @@ class _HomeScreenState extends State<HomeScreen> {
                               scale: anim.value,
                               child: generalStats.percentChange1h != null
                                   ? Text(
-                                      generalStats.percentChange1h.toString() + '%',
+                                      generalStats.percentChange1h.toString() +
+                                          '%',
                                       textAlign: TextAlign.end,
                                       style: TextStyle(
-                                        color: generalStats.percentChange1h.toString().contains('-') ? Colors.red : Colors.green,
+                                        color: generalStats.percentChange1h
+                                                .toString()
+                                                .contains('-')
+                                            ? Colors.red
+                                            : Colors.green,
                                         fontSize: ConstanceData.SIZE_TITLE14,
                                       ),
                                     )
@@ -878,7 +919,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: AllCoustomTheme.boxColor(),
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.only(top: 6, bottom: 8, left: 8, right: 8),
+                        padding: const EdgeInsets.only(
+                            top: 6, bottom: 8, left: 8, right: 8),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
@@ -897,7 +939,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: InkWell(
                                   onTap: () {},
                                   child: Icon(
-                                    marketCapUpDown == Icons.arrow_upward ? Icons.arrow_upward : Icons.arrow_downward,
+                                    marketCapUpDown == Icons.arrow_upward
+                                        ? Icons.arrow_upward
+                                        : Icons.arrow_downward,
                                     size: 18,
                                     color: AllCoustomTheme.getTextThemeColors(),
                                   ),
@@ -927,27 +971,52 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Padding(
                         padding: const EdgeInsets.only(top: 26),
                         child: Column(
-                          children: [1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1]
+                          children: [
+                            1,
+                            1,
+                            2,
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            2,
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            1
+                          ]
                               .map(
                                 (_) => Padding(
-                                  padding: const EdgeInsets.only(left: 16, right: 16),
+                                  padding: const EdgeInsets.only(
+                                      left: 16, right: 16),
                                   child: Column(
                                     children: <Widget>[
                                       SizedBox(
                                         height: 10,
                                       ),
                                       Row(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           CircleAvatar(
                                             radius: 14,
                                           ),
                                           Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 8),
                                           ),
                                           Expanded(
                                             child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
                                               children: [
                                                 Container(
                                                   width: double.infinity,
@@ -955,7 +1024,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   color: Colors.white,
                                                 ),
                                                 Padding(
-                                                  padding: const EdgeInsets.symmetric(vertical: 2.0),
+                                                  padding: const EdgeInsets
+                                                      .symmetric(vertical: 2.0),
                                                 ),
                                                 Container(
                                                   width: 40.0,
@@ -985,19 +1055,27 @@ class _HomeScreenState extends State<HomeScreen> {
                     padding: const EdgeInsets.only(left: 16, right: 16),
                     child: ListView.builder(
                       physics: BouncingScrollPhysics(),
-                      itemCount: _isSearch ? _serchCoinList.length : lstCryptoCoinDetail.length,
+                      itemCount: _isSearch
+                          ? _serchCoinList.length
+                          : lstCryptoCoinDetail.length,
                       itemBuilder: (BuildContext context, int index) {
-                        var coinData = _isSearch ? _serchCoinList[index] : lstCryptoCoinDetail[index];
+                        var coinData = _isSearch
+                            ? _serchCoinList[index]
+                            : lstCryptoCoinDetail[index];
+
                         // ignore: unused_local_variable
                         var coinId = coinData.id.toString();
                         var coinSymbol = coinData.symbol.toString();
                         var coinName = coinData.name.toString();
                         var price = coinData.quote!.uSD!.price.toString();
-                        var percentchange1h = coinData.quote!.uSD!.percentChange1h.toString();
-                        var marketCap = coinData.quote!.uSD!.marketCap.toString();
+                        var percentchange1h =
+                            coinData.quote!.uSD!.percentChange1h.toString();
+                        var marketCap =
+                            coinData.quote!.uSD!.marketCap.toString();
                         var volume = coinData.quote!.uSD!.volume24h.toString();
                         var availableSupply = coinData.totalSupply.toString();
-                        var changein24HR = coinData.quote!.uSD!.percentChange24h.toString();
+                        var changein24HR =
+                            coinData.quote!.uSD!.percentChange24h.toString();
                         return InkWell(
                           highlightColor: Colors.transparent,
                           splashColor: Colors.transparent,
@@ -1046,13 +1124,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                     height: 30,
                                     width: 30,
                                     child: CachedNetworkImage(
-                                      errorWidget: (context, url, error) => CircleAvatar(
-                                        backgroundColor: AllCoustomTheme.getsecoundTextThemeColor(),
+                                      errorWidget: (context, url, error) =>
+                                          CircleAvatar(
+                                        backgroundColor: AllCoustomTheme
+                                            .getsecoundTextThemeColor(),
                                         child: Text(
                                           coinSymbol.substring(0, 1),
                                         ),
                                       ),
-                                      imageUrl: coinImageURL + coinSymbol.toLowerCase() + "@2x.png",
+                                      imageUrl: coinImageURL +
+                                          coinSymbol.toLowerCase() +
+                                          "@2x.png",
                                       fit: BoxFit.cover,
                                     ),
                                   ),
@@ -1060,12 +1142,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                     width: 16,
                                   ),
                                   Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: <Widget>[
                                       Text(
                                         coinName,
                                         style: TextStyle(
-                                          color: AllCoustomTheme.getTextThemeColors(),
+                                          color: AllCoustomTheme
+                                              .getTextThemeColors(),
                                         ),
                                       ),
                                       SizedBox(
@@ -1074,7 +1158,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                       Text(
                                         coinSymbol,
                                         style: TextStyle(
-                                          color: AllCoustomTheme.getsecoundTextThemeColor(),
+                                          color: AllCoustomTheme
+                                              .getsecoundTextThemeColor(),
                                           fontSize: ConstanceData.SIZE_TITLE12,
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -1086,18 +1171,25 @@ class _HomeScreenState extends State<HomeScreen> {
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: <Widget>[
                                       Text(
-                                        ' \$ ' + double.parse(price).toStringAsFixed(2),
+                                        ' \$ ' +
+                                            double.parse(price)
+                                                .toStringAsFixed(2),
                                         style: TextStyle(
-                                          color: AllCoustomTheme.getTextThemeColors(),
+                                          color: AllCoustomTheme
+                                              .getTextThemeColors(),
                                         ),
                                       ),
                                       SizedBox(
                                         height: 4,
                                       ),
                                       Text(
-                                        percentchange1h.contains('-') ? '' + percentchange1h + '%' : '+' + percentchange1h + '%',
+                                        percentchange1h.contains('-')
+                                            ? '' + percentchange1h + '%'
+                                            : '+' + percentchange1h + '%',
                                         style: TextStyle(
-                                          color: percentchange1h.contains('-') ? Colors.red : Colors.green,
+                                          color: percentchange1h.contains('-')
+                                              ? Colors.red
+                                              : Colors.green,
                                           fontSize: ConstanceData.SIZE_TITLE12,
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -1107,7 +1199,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ],
                               ),
                               Divider(
-                                color: AllCoustomTheme.getsecoundTextThemeColor(),
+                                color:
+                                    AllCoustomTheme.getsecoundTextThemeColor(),
                               )
                             ],
                           ),
@@ -1347,7 +1440,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         onTap: () {
                           Navigator.of(context).push(
                             CupertinoPageRoute(
-                              builder: (BuildContext context) => ChangePINCode(),
+                              builder: (BuildContext context) =>
+                                  ChangePINCode(),
                             ),
                           );
                         },
@@ -1406,12 +1500,14 @@ class _HomeScreenState extends State<HomeScreen> {
     if (marketCapUpDown == Icons.arrow_upward) {
       setState(() {
         marketCapUpDown = Icons.arrow_downward;
-        marketListData.sort((a, b) => a.quote.uSD.marketCap.compareTo(b.quote.uSD.marketCap));
+        marketListData.sort(
+            (a, b) => a.quote.uSD.marketCap.compareTo(b.quote.uSD.marketCap));
       });
     } else {
       setState(() {
         marketCapUpDown = Icons.arrow_upward;
-        marketListData.sort((a, b) => b.quote.uSD.marketCap.compareTo(a.quote.uSD.marketCap));
+        marketListData.sort(
+            (a, b) => b.quote.uSD.marketCap.compareTo(a.quote.uSD.marketCap));
       });
     }
   }

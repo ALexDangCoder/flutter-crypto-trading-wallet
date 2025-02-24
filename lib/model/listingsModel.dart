@@ -68,7 +68,7 @@ class CryptoCoinDetail {
   int? numMarketPairs;
   String? dateAdded;
   List<String>? tags;
-  int? maxSupply;
+  num? maxSupply;
   dynamic circulatingSupply;
   dynamic totalSupply;
   Platform? platform;

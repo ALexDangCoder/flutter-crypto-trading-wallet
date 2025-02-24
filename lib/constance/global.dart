@@ -19,7 +19,8 @@ var usertoken = '';
 var buttoncolor1 = Color(0xFF123962);
 var buttoncolor2 = Color(0xFF7635ff);
 
-String coinMarketcap = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?start=";
+String coinMarketcap =
+    "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?start=";
 String coinImageURL = 'https://static.coincap.io/assets/icons/';
 
 normalizeNumNoCommas(num input) {
@@ -35,30 +36,48 @@ normalizeNumNoCommas(num input) {
 }
 
 Future<List<CryptoCoinDetail>> getData1(int start) async {
-  Listings objListings = new Listings();
+  Listings objListings = Listings();
   List<CryptoCoinDetail> lstCryptoCoinDetail = [];
 
-  Map<String, dynamic> head = {
+  final Map<String, dynamic> head = {
     "Accept": "application/json",
     "X-CMC_PRO_API_KEY": "41939c64-03af-467f-8e62-f150722470e0",
   };
 
   try {
-    var response = await Dio().get(
-      "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?start=1",
+    final response = await Dio().get(
+      "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?start=$start",
       options: Options(
         headers: head,
       ),
     );
+
     if (response.statusCode == 200) {
       objListings = Listings.fromJson(response.data);
-      objListings.data!.forEach((element) {
+      objListings.data?.forEach((element) {
         lstCryptoCoinDetail.add(element);
       });
     }
-  } catch (e) {
-    print("Something Wrong $e");
   }
+  // Bắt lỗi riêng cho DioError
+  on DioError catch (dioError, stackTrace) {
+    // In thông tin lỗi Dio
+    print("DioError: $dioError");
+    // Nếu có response (server có phản hồi), in chi tiết
+    if (dioError.response != null) {
+      print("Status code: ${dioError.response?.statusCode}");
+      print("Response data: ${dioError.response?.data}");
+      print("Headers: ${dioError.response?.headers}");
+    }
+    // In stack trace để biết chính xác vị trí xảy ra lỗi
+    print("Stack trace: $stackTrace");
+  }
+  // Bắt lỗi chung (các lỗi không phải DioError)
+  catch (e, stackTrace) {
+    print("Lỗi khác: $e");
+    print(stackTrace);
+  }
+
   return lstCryptoCoinDetail;
 }
 
@@ -148,7 +167,8 @@ class MySeparator extends StatelessWidget {
 class AnimatedForwardArrow extends StatelessWidget {
   final bool isShowingarroeForward;
 
-  const AnimatedForwardArrow({key, required this.isShowingarroeForward}) : super(key: key);
+  const AnimatedForwardArrow({key, required this.isShowingarroeForward})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -248,7 +268,9 @@ class PinDisable extends StatelessWidget {
 
 class PinNumberStyle extends StatelessWidget {
   final String digit;
+
   const PinNumberStyle({key, required this.digit}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Text(
@@ -267,6 +289,7 @@ class MagicBoxGradiantLine extends StatelessWidget {
   final double? height;
 
   const MagicBoxGradiantLine({key, required this.height}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Container(
